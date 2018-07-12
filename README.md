@@ -2,7 +2,7 @@
 CPU project
 
 ## 代码架构
-= single\_cycle 单周期处理器
+- single\_cycle 单周期处理器
 - pipeline 流水线处理器
 - mips\_compiler MIPS编译器，代码和机器码
 
