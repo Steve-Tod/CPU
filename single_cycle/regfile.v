@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module RegFile(reset, clk, RegWrite, Read_register1, Read_register2, Write_register, Write_data, Read_data1, Read_data2);
+module RegisterFile(reset, clk, RegWrite, Read_register1, Read_register2, Write_register, Write_data, Read_data1, Read_data2);
     input reset, clk;
     input RegWrite;
     input [4:0] Read_register1, Read_register2, Write_register;
