@@ -1,24 +1,23 @@
 `timescale 1ns/1ps
 
-module RegFile (reset,clk,addr1,data1,addr2,data2,wr,addr3,data3);
-input reset,clk;
-input wr;
-input [4:0] addr1,addr2,addr3;
-output [31:0] data1,data2;
-input [31:0] data3;
+module RegisterFile(reset, clk, RegWrite, Read_register1, Read_register2, Write_register, Write_data, Read_data1, Read_data2);
+    input reset, clk;
+    input RegWrite;
+    input [4:0] Read_register1, Read_register2, Write_register;
+    input [31:0] Write_data;
+    output [31:0] Read_data1, Read_data2;
 
-reg [31:0] RF_DATA[31:1];
-integer i;
+    reg [31:0] RF_data[31:1];
 
-assign data1=(addr1==5'b0)?32'b0:RF_DATA[addr1];	//$0 MUST be all zeros
-assign data2=(addr2==5'b0)?32'b0:RF_DATA[addr2];
+    assign Read_data1 = (Read_register1 == 5'b00000)? 32'h00000000: RF_data[Read_register1];
+    assign Read_data2 = (Read_register2 == 5'b00000)? 32'h00000000: RF_data[Read_register2];
 
-always@(negedge reset or posedge clk) begin
-	if(~reset) begin
-		for(i=1;i<32;i=i+1) RF_DATA[i]<=32'b0;
-	end
-	else begin
-		if(wr && addr3) RF_DATA[addr3] <= data3;
-	end
-end
+    integer i;
+    always @(posedge reset or posedge clk)
+        if (reset)
+            for (i = 1; i < 32; i = i + 1)
+                RF_data[i] <= 32'h00000000;
+        else if (RegWrite && (Write_register != 5'b00000))
+            RF_data[Write_register] <= Write_data;
+
 endmodule
