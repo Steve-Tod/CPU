@@ -27,4 +27,7 @@ $ git rebase master
 $ git push origin jzy
 ```
 
+注意，上面的 jzy 都换成自己的分支名字
+
+
 然后进入github网页，提交一个 merge request ， master 分支的拥有者 review 通过之后就会合并。
