@@ -1,13 +1,3 @@
-//compile
-//000 001 add     000 000 sub
-
-//110 000 beq     110 010 bne    110 100 bltz    110 110 bgtz
-//111 000 blez    111 010 slt slti sltiu
-
-//101 100 sll     101 101 srl    101 110 sra
-
-//011 100 and     011 101 or     011 110 xor    011 111 nor
-
 module ALU(DataA,DataB,ALUFun,Sign,ALUOut);
 input [31:0] DataA, DataB;
 input [5:0] ALUFun;
@@ -17,7 +7,7 @@ wire  [31:0] S1,S2,S3,S4;
 wire  Zero,Overflow,Negitive;
 
 ALU_AddSub ALU1(DataA,DataB,ALUFun[0],Sign,S1,Zero,Overflow,Negitive);
-ALU_CMP ALU2(Zero,Overflow,Negitive,ALUFun[3£º1],S2);
+ALU_Cmp ALU2(Zero,Overflow,Negitive,ALUFun[3:1],S2);
 ALU_Logic ALU3(DataA, DataB, ALUFun[3:0],S3);
 ALU_Shift ALU4(DataA,DataB,ALUFun[1:0],S4);
 
@@ -30,7 +20,6 @@ begin
     2'b10 : Out = S4;
     endcase
 end
-
 endmodule
 
 
@@ -44,10 +33,10 @@ wire Overflow;            //Data is saved as the Bu Ma
 assign ss = {DataA[31],DataB[31]};  //sign of two
 always @(*) begin
    Temp_B = DataB;           //self
-   if(Op == 1)begin            //Add
+   if(Op == 1)begin            // Op = 1  for Add
       Sum = DataA + DataB;
    end
-   if(Op == 0)begin           //Sub
+   if(Op == 0)begin           //Op = 0 for Sub
       Temp_B = ~DataB + 1
       Sum = DataA + Temp_B;
    end
@@ -62,7 +51,7 @@ assign Negitive = ~Sign ?  0 :
                   S[31];
 endmodule
 
-module ALU_CMP(Zero,Overflow,Negitive,Op,S);
+module ALU_Cmp(Zero,Overflow,Negitive,Op,S);
 input Zero,Overflow,Negitive;
 input [2:0]Op;
 output reg [31:0] S;
