@@ -29,9 +29,9 @@ module Control(OpCode, Funct, IRQ ,
     parameter ALUSLL = 6'b10_0000;
     parameter ALUSRL = 6'b10_0001;
     parameter ALUSRA = 6'b10_0011;
-    parameter ALUEQ = 6'b11_0011;
+    parameter ALUEQ =  6'b11_0011;
     parameter ALUNEQ = 6'b11_0001;
-    parameter ALULT = 6'b11_0101;
+    parameter ALULT =  6'b11_0101;
     parameter ALULEZ = 6'b11_1101;
     parameter ALULTZ = 6'b11_1011;
     parameter ALUGTZ = 6'b11_1111; 
@@ -74,7 +74,7 @@ module Control(OpCode, Funct, IRQ ,
 	assign Sign = 
     //exist question
 	(   (OpCode == 6'h00 && 
-        (Funct == 6'h20  || Funct == 6'h22)) || 
+        (Funct == 6'h20 || Funct == 6'h22)) || 
         OpCode == 6'h08 || 
         OpCode == 6'h0a || 
         OpCode == 6'h01 || 
@@ -115,7 +115,7 @@ module Control(OpCode, Funct, IRQ ,
 	assign ALUSrc1 = 
 	(   OpCode == 6'h00 && 
         (Funct == 6'h00 || 
-        Funct == 6'h02 || 
+        Funct == 6'h02  || 
         Funct == 6'h03))? 1:
 		0;
 	assign ALUSrc2 =

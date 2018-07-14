@@ -2,7 +2,7 @@ module ALU(DataA,DataB,ALUFun,Sign,ALUOut);
 input [31:0] DataA, DataB;
 input [5:0] ALUFun;
 input Sign;
-output reg ALUOut[31:0];
+output reg [31:0]ALUOut;
 wire  [31:0] S1,S2,S3,S4;
 wire  Zero,Overflow,Negitive;
 
@@ -14,10 +14,10 @@ ALU_Shift ALU4(DataA,DataB,ALUFun[1:0],S4);
 always @(*)
 begin
    case(ALUFun[5:4])
-    2'b00 : Out = S1;
-    2'b11 : Out = S2;
-    2'b01 : Out = S3;
-    2'b10 : Out = S4;
+    2'b00 : ALUOut = S1;
+    2'b11 : ALUOut = S2;
+    2'b01 : ALUOut = S3;
+    2'b10 : ALUOut = S4;
     endcase
 end
 endmodule
@@ -28,6 +28,7 @@ input [31:0]DataA,DataB;
 reg[31:0]Temp_B;
 input Op,Sign;              //sign = 1 stands for MSB
 output Zero,Negitive,Overflow;
+output [31:0]S;
 reg [32:0]Sum;
 wire Overflow;            //Data is saved as the Bu Ma
 assign ss = {DataA[31],DataB[31]};  //sign of two
@@ -86,7 +87,7 @@ begin
        4'b1110 : S = DataA|DataB;
        4'b0110 : S = DataA^DataB;
        4'b0001 : S = ~(DataA|DataB);
-       4'b1010 : S = A;  //"A"
+       4'b1010 : S = DataA;  //"A"
        default : S = 0;
      endcase
 end
