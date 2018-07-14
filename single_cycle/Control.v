@@ -19,7 +19,7 @@ module Control(PC,OpCode, Funct, IRQ ,
 	output ALUSrc2;
 	output ExtOp;
 	output LuOp;
-	output [5:0] ALUFun;
+	output reg [5:0] ALUFun;
 
     parameter ALUADD = 6'b00_0000;
     parameter ALUSUB = 6'b00_0001;
@@ -73,13 +73,12 @@ module Control(PC,OpCode, Funct, IRQ ,
         Funct == 6'h02 ||
         Funct == 6'h03 ||
         Funct == 6'h08 ||
-        Funct == 6'h09 ||
-        ) 
+        Funct == 6'h09) 
     )? 1'b0 : 1'b1; 
 
 
-	XADR = ~PC & UnDefine;
-    ILLOP = ~PC & IRQ;
+	assign XADR = ~PC & UnDefine;
+    assign ILLOP = ~PC & IRQ;
 
 	assign PCSrc[2:0] =
          ILLOP? 3'b100 :
@@ -172,7 +171,7 @@ module Control(PC,OpCode, Funct, IRQ ,
             6'h26: ALUOp <= ALUXOR;
             6'h27: ALUOp <= ALUNOR;
             6'h2a: ALUOp <= ALULT;
-            default: aluFunct <= ALUADD;
+            default: ALUOp <= ALUADD;
         endcase
     always @(*)
         case (OpCode)
