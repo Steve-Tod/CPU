@@ -33,10 +33,10 @@ wire Overflow;            //Data is saved as the Bu Ma
 assign ss = {DataA[31],DataB[31]};  //sign of two
 always @(*) begin
    Temp_B = DataB;           //self
-   if(Op == 1)begin            // Op = 1  for Add
+   if(Op == 0)begin            // Op = 0  for Add
       Sum = DataA + DataB;
    end
-   if(Op == 0)begin           //Op = 0 for Sub
+   if(Op == 1)begin           //Op = 1 for Sub
       Temp_B = ~DataB + 1
       Sum = DataA + Temp_B;
    end
@@ -46,8 +46,8 @@ assign Overflow = ~Sign ? Sum[32] :
 assign S = Sum[31:0];
 assign Zero = ~(|S);
 assign Negitive = ~Sign ?  0 :
-                  ((ss == 2'b11 && Op == 1)||(ss == 2'b10 && Op == 0))? 1 :
-                  ((ss == 2'b00 && Op == 1)||(ss == 2'b01 && Op == 0))? 0 :
+                  ((ss == 2'b11 && Op == 0)||(ss == 2'b10 && Op == 1))? 1 :
+                  ((ss == 2'b00 && Op == 0)||(ss == 2'b01 && Op == 1))? 0 :
                   S[31];
 endmodule
 
@@ -62,12 +62,12 @@ always@(Zero or Overflow or Negitive or Op)
 begin
  //if(Overflow) N = ~N;   // is it right??  //Nope
  case(Op)
-   3'b000 : S <= {31'b0,Zero}; //Beq
-   3'b001 : S <= {31'b0,~Zero}; // Bne
-   3'b101 : S <= {31'b0,Negitive};  //slt..
-   3'b100 : S <= {31'b0,Negitive|Zero}; //Blez
-   3'b010 : S <= {31'b0, Negitive}; //Bltz
-   3'b011 : S <= {31'b0,(~Negitive)&(~Zero)};//Bgtz
+   3'b001 : S <= {31'b0,Zero}; //Beq
+   3'b000 : S <= {31'b0,~Zero}; // Bne
+   3'b010 : S <= {31'b0,Negitive};  //slt..
+   3'b110 : S <= {31'b0,Negitive|Zero}; //Blez
+   3'b101 : S <= {31'b0, Negitive}; //Bltz
+   3'b111 : S <= {31'b0,(~Negitive)&(~Zero)};//Bgtz
    default : S <= 0;
  endcase
 end
@@ -82,10 +82,11 @@ output reg [31:0]S;
 always@(DataA or DataB or Op)
 begin
      case(Op)
-       4'b1100 : S = DataA&DataB;
-       4'b1101 : S = DataA|DataB;
-       4'b1110 : S = DataA^DataB;
-       4'b1111 : S = ~(DataA|DataB);
+       4'b1000 : S = DataA&DataB;
+       4'b1110 : S = DataA|DataB;
+       4'b0110 : S = DataA^DataB;
+       4'b0001 : S = ~(DataA|DataB);
+       4'b1010 : S = A;  //"A"
        default : S = 0;
      endcase
 end
@@ -102,7 +103,7 @@ begin
    case(Op)
      2'b00 : S = (DataB << DataA[4:0])  //sll
      2'b01 : S = (DataB >> DataA[4:0])  //srl
-     2'b10 : S = ({{32{DataB[31]}}, DataB} >> DataA[4:0])
+     2'b11 : S = ({{32{DataB[31]}}, DataB} >> DataA[4:0])
      default : S = 0;
      endcase
 end

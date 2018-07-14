@@ -11,7 +11,7 @@ module DataMem(reset, clk, Address, Write_data, Read_data, MemRead, MemWrite);
 
     assign Read_data =
     (MemRead && (Address < RAM_SIZE)) ? RAMDATA[Address[31:2]] : 32'b0;
-    //Y:Actually , We can take Address[7:2] instead of [31:2] because Address < 256
+    //Y:Actually , We can take Address[9:2] instead of [31:2] because Address < 256
 
     always@(posedge clk)
        if(MemWrite && (Address < RAM_SIZE))

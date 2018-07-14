@@ -1,13 +1,14 @@
 `timescale 1ns/1ps
 
 module ROM (addr,Instruction);
-input [31:0] addr;
+//special: PC[30:0] is useful
+input [30:0] addr;
 output [31:0] Instruction;
 reg [31:0] Instruction;
 localparam ROM_SIZE = 32;
 reg [31:0] ROM_DATA[ROM_SIZE-1:0];
 
-always@(*)
+always@(*) //7-2 = 5,2**5 = 32   it is up to your ROM
     case(addr[7:2]) //Address Must Be Word Aligned.
         0: Instruction <= 32'h3c114000;
         1: Instruction <= 32'h26310004;
