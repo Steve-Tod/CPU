@@ -2,7 +2,7 @@
 
 module Peripheral (reset,clk,rd,wr,addr,wdata,rdata,led,switch,digi,irqout,
                    UART_RX, UART_TX, PC31);
-input reset,clk;
+input reset,clk,PC31;
 input rd,wr;
 input [31:0] addr;
 input [31:0] wdata;
@@ -37,7 +37,7 @@ sender sender1(reset, br_clk_16, TX_DATA, TX_EN, TX_STATUS, UART_TX);
 
 reg [31:0] TH,TL;
 reg [2:0] TCON;
-assign irqout = TCON[2];
+assign irqout = (~PC31) & TCON[2];
 
 always@(*) begin
     if(rd) begin
