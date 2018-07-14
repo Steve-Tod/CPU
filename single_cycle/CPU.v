@@ -7,7 +7,7 @@ UART_RX, UART_TX);
   input UART_RX;
 
   output [7:0] led;
-  output [6:0] digi1,digi2，digi3，digi4;
+  output [6:0] digi1,digi2,digi3,digi4;
   output UART_TX;
   
   reg [31:0] PC;

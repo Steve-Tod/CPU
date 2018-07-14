@@ -37,7 +37,7 @@ always @(*) begin
       Sum = DataA + DataB;
    end
    if(Op == 1)begin           //Op = 1 for Sub
-      Temp_B = ~DataB + 1
+      Temp_B = ~DataB + 1;
       Sum = DataA + Temp_B;
    end
 end
@@ -101,9 +101,9 @@ output reg  [31:0]S;
 always @(*)
 begin
    case(Op)
-     2'b00 : S = (DataB << DataA[4:0])  //sll
-     2'b01 : S = (DataB >> DataA[4:0])  //srl
-     2'b11 : S = ({{32{DataB[31]}}, DataB} >> DataA[4:0])
+     2'b00 : S = (DataB << DataA[4:0]);  //sll
+     2'b01 : S = (DataB >> DataA[4:0]);  //srl
+     2'b11 : S = ({{32{DataB[31]}}, DataB} >> DataA[4:0]);
      default : S = 0;
      endcase
 end
