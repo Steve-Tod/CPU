@@ -65,8 +65,6 @@ always@(negedge reset or posedge clk) begin
         TH <= 32'b0;
         TL <= 32'b0;
         TCON <= 3'b0; 
-        TX_DATA <= 0;
-        RX_DATA <= 0;
         UART_CON <= 0;
         TX_EN <= 0;
         reading <= 0;
@@ -115,8 +113,11 @@ always@(negedge reset or posedge clk) begin
                     if (TX_STATUS && ~TX_EN) begin
                         TX_EN <= 1;
                         UART_CON[4] <= 1;
-							end
-						  end
+                    end
+				end
+				//UART_RXD should not be written
+				32'h4000001c : UART_RXD <= wdata [7:0];
+				32'h40000020 : UART_CON <= wdata [4:0];
                 default: ;
             endcase
         end
