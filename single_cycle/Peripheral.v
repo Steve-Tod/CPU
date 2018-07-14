@@ -17,7 +17,7 @@ reg [11:0] digi;
 output irqout;
 
 // UART
-input UART_RX；
+input UART_RX;
 output UART_TX;
 
 wire    brclk16;
@@ -65,8 +65,6 @@ always@(negedge reset or posedge clk) begin
         TH <= 32'b0;
         TL <= 32'b0;
         TCON <= 3'b0; 
-        TX_DATA <= 0;
-        RX_DATA <= 0;
         UART_CON <= 0;
         TX_EN <= 0;
         reading <= 0;
@@ -82,7 +80,7 @@ always@(negedge reset or posedge clk) begin
         end
         //read
         //set 0
-        if (rd && (addr = 32'h4000_0020)) begin
+        if (rd && (addr == 32'h4000_0020)) begin
             UART_CON[3:2] <= 2'b0;
         end
         //use reading to avoid setting repeatedly
@@ -116,6 +114,10 @@ always@(negedge reset or posedge clk) begin
                         TX_EN <= 1;
                         UART_CON[4] <= 1;
                     end
+				end
+				//UART_RXD should not be written
+				32'h4000001c : UART_RXD <= wdata [7:0];
+				32'h40000020 : UART_CON <= wdata [4:0];
                 default: ;
             endcase
         end
