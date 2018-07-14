@@ -37,7 +37,7 @@ always @(*) begin
       Sum = DataA + DataB;
    end
    if(Op == 1)begin           //Op = 1 for Sub
-      Temp_B = ~DataB + 1
+      Temp_B = ~DataB + 1;
       Sum = DataA + Temp_B;
    end
 end
