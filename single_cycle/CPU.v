@@ -20,7 +20,8 @@ UART_RX, UART_TX);
 			PC <= PC_next;
 	 
 	wire [31:0] PC_plus_4;
-	assign PC_plus_4 = PC + 32'd4;
+	//We cant change the top
+	assign PC_plus_4 = {PC[31],PC[30:0] + 31'd4};
 	
 	wire [31:0] Instruction;
     //PC[31] is meaningless in searching addr
@@ -41,7 +42,7 @@ UART_RX, UART_TX);
 	wire ALUSrc2;
 	wire RegWrite;
 
-	Control  Ctrl1(.OpCode(Instruction[31:26]), 
+	Control  Ctrl1(.PC(PC[31]),.OpCode(Instruction[31:26]), 
     .Funct(Instruction[5:0]), .IRQ(IRQ) ,
 	.PCSrc(PCSrc), .Sign(Sign), .RegWrite(RegWrite), 
     .RegDst(RegDst), .MemRead(MemRead), 
@@ -92,7 +93,8 @@ UART_RX, UART_TX);
 
 	assign Databus3 = 
 	         (MemtoReg == 2'b00)? ALU_out: 
-	         (MemtoReg == 2'b01)? Read_data:PC_plus_4;
+	         (MemtoReg == 2'b01)? Read_data:
+			 (MemtoReg == 2'b10)? PC_plus_4 : PC;//ILLOP use the PC
 	
     wire [31:0] Jump_target;
 	assign Jump_target = {PC_plus_4[31:28], Instruction[25:0], 2'b00};
@@ -104,7 +106,7 @@ UART_RX, UART_TX);
 	
 	wire [31:0] ILLOP,XADR;
 	assign ILLOP = 32'h80000004;
-    assign XADR = 32'H80000008;
+    assign XADR = 32'h80000008;
 
 	
 	assign PC_next = 
