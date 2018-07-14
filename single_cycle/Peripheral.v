@@ -33,13 +33,18 @@ reg     reading, writing;
 reg     [9:0]   TX_cnt;
 parameter   CNT_NUM = 10'd325;
 
-br_clk_16 br_clk1(sysclk, brclk16);
-receiver receiver1(reset, UART_RX, br_clk_16, RX_DATA, RX_STATUS);
-sender sender1(reset, br_clk_16, TX_DATA, TX_EN, TX_STATUS, UART_TX);
+br_clk_16 br_clk1(clk, brclk16);
+receiver receiver1(reset, UART_RX, brclk16, RX_DATA, RX_STATUS);
+sender sender1(reset, brclk16, TX_DATA, TX_EN, TX_STATUS, UART_TX);
 
 reg [31:0] TH,TL;
 reg [2:0] TCON;
 assign irqout = (~PC31) & TCON[2];
+
+initial begin
+	TX_EN = 0;
+	TX_cnt = 0;
+end
 
 always@(*) begin
     if(rd) begin
@@ -124,4 +129,7 @@ always@(negedge reset or posedge clk) begin
     end
 end
 endmodule
+
+
+
 
