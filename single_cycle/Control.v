@@ -1,4 +1,4 @@
-module Control(OpCode, Funct, IRQ ,
+module Control(PC,OpCode, Funct, IRQ ,
 	PCSrc, Sign, RegWrite, RegDst, 
 	MemRead, MemWrite, MemtoReg, 
 	ALUSrc1, ALUSrc2, ExtOp, LuOp, ALUFun);
@@ -6,6 +6,7 @@ module Control(OpCode, Funct, IRQ ,
 	input [5:0] OpCode;
 	input [5:0] Funct;
     input IRQ;
+    input PC;//PC[31]
 
 	output [2:0] PCSrc;
 	output Sign;
@@ -40,10 +41,10 @@ module Control(OpCode, Funct, IRQ ,
     //but it's requested
     parameter ALUA = 6'b01_1010; 
 
+
     wire UnDefine;
     assign UnDefine =
-    (    OpCode == 6'h00    ||
-         OpCode == 6'h01    ||
+    (    OpCode == 6'h01    ||
          OpCode == 6'h02    ||
          OpCode == 6'h03    ||
          OpCode == 6'h04    ||
@@ -57,11 +58,32 @@ module Control(OpCode, Funct, IRQ ,
          OpCode == 6'h0c    ||
          OpCode == 6'h0f    ||
          OpCode == 6'h23    ||
-         OpCode == 6'h2b) ? 1'b0 : 1'b1;
-	
+         OpCode == 6'h2b) ? 1'b0 : 
+    (   OpCode == 6'h00 &&
+       (Funct == 6'h20 ||
+        Funct == 6'h21 ||
+        Funct == 6'h22 ||
+        Funct == 6'h23 ||
+        Funct == 6'h24 ||
+        Funct == 6'h25 ||
+        Funct == 6'h26 ||
+        Funct == 6'h27 ||
+        Funct == 6'h2a ||
+        Funct == 6'h00 ||
+        Funct == 6'h02 ||
+        Funct == 6'h03 ||
+        Funct == 6'h08 ||
+        Funct == 6'h09 ||
+        ) 
+    )? 1'b0 : 1'b1; 
+
+
+	XADR = ~PC & UnDefine;
+    ILLOP = ~PC & IRQ;
+
 	assign PCSrc[2:0] =
-        IRQ? 3'b100 :
-        UnDefine? 3'b101 :
+         ILLOP? 3'b100 :
+         XADR? 3'b101 :
 	(    OpCode == 6'h04 || 
          OpCode == 6'h05 || 
          OpCode == 6'h06 || 
@@ -69,7 +91,7 @@ module Control(OpCode, Funct, IRQ ,
          OpCode == 6'h01) ? 3'b001:
 	(    OpCode == 6'h02 || 
          OpCode == 6'h03) ? 3'b010:
-	(    OpCpde == 6'h00 && 
+	(    OpCode == 6'h00 && 
         ( Funct == 6'h08 || Funct == 6'h09)) ? 3'b011 : 3'b000;
 	assign Sign = 
     //exist question
@@ -84,7 +106,7 @@ module Control(OpCode, Funct, IRQ ,
         OpCode == 6'h07) ? 1:
 		 0;
 	assign RegWrite = 
-        (IRQ || UnDefine)? 1 :   //We should keep the PC + 4 in this situation
+        (ILLOP || XADR)? 1 :   //We should keep the PC + 4 in this situation
 	(   OpCode == 6'h2b || 
         OpCode == 6'h04 ||
         OpCode == 6'h02 || 
@@ -95,7 +117,7 @@ module Control(OpCode, Funct, IRQ ,
         (OpCode == 6'h00 && Funct == 6'h08)) ? 0:
 		1;
 	assign RegDst[1:0] = 
-        (IRQ || UnDefine)? 2'b11:
+        (ILLOP || XADR)? 2'b11:
 		(OpCode == 6'h00)? 2'b00:
 		(OpCode == 6'h03)? 2'b10:
 		2'b01;
@@ -106,9 +128,9 @@ module Control(OpCode, Funct, IRQ ,
 		(OpCode == 6'h2b)?1:
 		0;
 	assign MemtoReg[1:0]=
-	(   UnDefine ||  
-        IRQ ||                  //choose PC + 4
-        OpCode == 6'h03 || 
+        XADR ? 2'b10:                  //choose PC + 4
+        ILLOP ? 2'b11 :            //choose PC
+	(    OpCode == 6'h03 || 
         (OpCode == 6'h00 && Funct == 6'h09))? 2'b10:
     	(OpCode == 6'h23)? 2'b01:
         2'b00;
