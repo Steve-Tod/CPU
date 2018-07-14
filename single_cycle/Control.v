@@ -1,14 +1,4 @@
-//compile
-//000 001 add     000 000 sub
-
-//110 000 beq     110 010 bne    110 100 bltz    110 110 bgtz
-//111 000 blez    111 010 slt slti sltiu
-
-//101 100 sll     101 101 srl    101 110 sra
-
-//011 100 and     011 101 or     011 110 xor    011 111 nor
-
-module Control(OpCode, Funct, IRQ
+module Control(OpCode, Funct, IRQ ,
 	PCSrc, Sign, RegWrite, RegDst, 
 	MemRead, MemWrite, MemtoReg, 
 	ALUSrc1, ALUSrc2, ExtOp, LuOp, ALUFun);
@@ -30,21 +20,25 @@ module Control(OpCode, Funct, IRQ
 	output LuOp;
 	output [5:0] ALUFun;
 
-    parameter ALUADD = 6'b00_0001;
-    parameter ALUSUB = 6'b00_0000;
-    parameter ALUAND = 6'b01_1100;
-    parameter ALUOR  = 6'b01_1101;
-    parameter ALUXOR = 6'b01_1110;
-    parameter ALUNOR = 6'b01_1111;
-    parameter ALUSLL = 6'b10_1100;
-    parameter ALUSRL = 6'b10_1101;
-    parameter ALUSRA = 6'b10_1110;
-    parameter ALUEQ = 6'b11_0000;
-    parameter ALUNEQ = 6'b11_0010;
-    parameter ALULT = 6'b11_1010;
-    parameter ALULEZ = 6'b11_1000;
-    parameter ALULTZ = 6'b11_0100;
-    parameter ALUGTZ = 6'b11_0110;  
+    parameter ALUADD = 6'b00_0000;
+    parameter ALUSUB = 6'b00_0001;
+    parameter ALUAND = 6'b01_1000;
+    parameter ALUOR  = 6'b01_1110;
+    parameter ALUXOR = 6'b01_0110;
+    parameter ALUNOR = 6'b01_0001;
+    parameter ALUSLL = 6'b10_0000;
+    parameter ALUSRL = 6'b10_0001;
+    parameter ALUSRA = 6'b10_0011;
+    parameter ALUEQ = 6'b11_0011;
+    parameter ALUNEQ = 6'b11_0001;
+    parameter ALULT = 6'b11_0101;
+    parameter ALULEZ = 6'b11_1101;
+    parameter ALULTZ = 6'b11_1011;
+    parameter ALUGTZ = 6'b11_1111; 
+    //add a function
+    //i dont know how to use it
+    //but it's requested
+    parameter ALUA = 6'b01_1010; 
 
     wire UnDefine;
     assign UnDefine =
@@ -112,11 +106,10 @@ module Control(OpCode, Funct, IRQ
 		(OpCode == 6'h2b)?1:
 		0;
 	assign MemtoReg[1:0]=
-	(   UnDefine ||                    //choose PC + 4
+	(   UnDefine ||  
+        IRQ ||                  //choose PC + 4
         OpCode == 6'h03 || 
         (OpCode == 6'h00 && Funct == 6'h09))? 2'b10:
-        IRQ? 2'b11:                   //If IRQ  we should keep the PC not PC+4
-	//We should set the bus3 = PC when Mem2Reg == 3
     	(OpCode == 6'h23)? 2'b01:
         2'b00;
 	assign ALUSrc1 = 
