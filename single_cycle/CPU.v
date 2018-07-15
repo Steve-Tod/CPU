@@ -25,7 +25,7 @@ UART_RX, UART_TX);
 	
 	wire [31:0] Instruction;
     //PC[31] is meaningless in searching addr
-	ROM Rom1(.addr(PC[30:0]), .Instruction(Instruction));
+	ROM Rom1(.addr(PC[30:0]), .Instruct(Instruction));
 	
 	wire IRQ;
 
@@ -80,8 +80,8 @@ UART_RX, UART_TX);
     //RAM addr 0x00000000 ~ 0x3FFFFFFF
     //Peri addr 0x40000000 ~ 0x7FFFFFFF 
 	assign Read_data = ALU_out[30] ? Read_data2 : Read_data1;
-	assign MemWrite1 = (MemWrite && (~ALU_out[30]));  //write the RAM
-	assign MemWrite2 = (MemWrite && (ALU_out[30]));   //write the peri
+	assign MemWrite1 = (MemWrite && ~ALU_out[30]);  //write the RAM
+	assign MemWrite2 = (MemWrite && ALU_out[30]);   //write the peri
  	DataMem data_memory(.reset(reset),.clk(sysclk),.Address(ALU_out), 
      .MemRead(MemRead), .MemWrite(MemWrite1),.Write_data(Databus2),
      .Read_data(Read_data1));
