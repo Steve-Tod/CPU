@@ -5,8 +5,16 @@
 
 # ModelSim
 */work
+*/*/work
 *.mpf
 *.qsf
 *.mti
 *.wlf
 transcript
+
+#Quartus
+*.qpf
+*.qws
+*/db
+*/incremental_db
+*/output_files
