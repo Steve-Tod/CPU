@@ -50,7 +50,7 @@ UART_RX, UART_TX);
 	.ALUSrc1(ALUSrc1), .ALUSrc2(ALUSrc2),
     .ExtOp(ExtOp),  .LuOp(LuOp), .ALUFun(ALUFun));
   
-  wire [31:0] Databus1, Databus2, Databus3;
+    wire [31:0] Databus1, Databus2, Databus3;
 	wire [4:0] Write_register;
 	assign Write_register = 
 	     (RegDst == 2'b00)? Instruction[15:11]: 
@@ -100,7 +100,7 @@ UART_RX, UART_TX);
 	assign Jump_target = {PC_plus_4[31:28], Instruction[25:0], 2'b00};
 	
 	wire [31:0] Branch_target;
-    wire ConBA;
+    wire [31:0]ConBA;
     assign ConBA =  PC_plus_4 + {Ext_out[29:0], 2'b00};
 	assign Branch_target = ALU_out[0] ? ConBA : PC_plus_4;
 	
