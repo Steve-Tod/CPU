@@ -77,11 +77,10 @@ always@(negedge reset or posedge clk) begin
         TX_EN <= 0;
         reading <= 0;
         TX_cnt <= 0;
+		UART_CON[1:0] <= 2'b11;
     end
     else begin
 		UART_CON[4] <= ~TX_STATUS;
-		UART_CON[0] <= ~PC31;
-		UART_CON[1] <= ~PC31;
         if(TCON[0]) begin   //timer is enabled
             if(TL==32'hffffffff) begin
                 TL <= TH;
