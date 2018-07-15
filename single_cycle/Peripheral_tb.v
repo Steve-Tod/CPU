@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 module Peripheral_tb;
 
 reg		reset, clk, rd, wr, UART_RX, PC31;
@@ -21,7 +22,8 @@ initial begin
 	wdata = 32'h0;
 	switch = 0;
 	data = 40'hffffa7ff96;
-	#10000000 $stop;
+	#1000000 addr = 32'h40000020;
+	#10 addr = 32'h4000001c;
 end
 
 always #10400 begin

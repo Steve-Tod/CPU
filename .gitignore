@@ -1,9 +1,12 @@
-# my configuration
+# Editor
 */_Previews
 */History
 .vscode/
+
+# ModelSim
 */work
 *.mpf
 *.qsf
 *.mti
 *.wlf
+transcript

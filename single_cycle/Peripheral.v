@@ -39,12 +39,15 @@ sender sender1(reset, brclk16, TX_DATA, TX_EN, TX_STATUS, UART_TX);
 
 reg [31:0] TH,TL;
 reg [2:0] TCON;
-assign irqout = (~PC31) & TCON[2];
 
 initial begin
 	TX_EN = 0;
 	TX_cnt = 0;
+	TCON = 3'b0;
+	UART_CON[4] = 0;
 end
+
+assign irqout = (~PC31) & TCON[2];
 
 always@(*) begin
     if(rd) begin
@@ -76,6 +79,9 @@ always@(negedge reset or posedge clk) begin
         TX_cnt <= 0;
     end
     else begin
+		UART_CON[4] <= ~TX_STATUS;
+		UART_CON[0] <= ~PC31;
+		UART_CON[1] <= ~PC31;
         if(TCON[0]) begin   //timer is enabled
             if(TL==32'hffffffff) begin
                 TL <= TH;
@@ -90,7 +96,7 @@ always@(negedge reset or posedge clk) begin
         end
         //use reading to avoid setting repeatedly
         if (~RX_STATUS) reading <= 0;
-        if (RX_STATUS && ~reading) begin
+        if (RX_STATUS && ~reading && UART_CON[1]) begin
             UART_CON[3] <= 1;
             UART_RXD <= RX_DATA;
             reading <= 1;
@@ -115,9 +121,8 @@ always@(negedge reset or posedge clk) begin
                 32'h40000018: begin
                     //since sender has cache, we don't need to worry if new TXD will affect the sending one
                     UART_TXD <= wdata[7:0];
-                    if (TX_STATUS && ~TX_EN) begin
+                    if (TX_STATUS && ~TX_EN && UART_CON[0]) begin
                         TX_EN <= 1;
-                        UART_CON[4] <= 1;
                     end
 				end
 				//UART_RXD should not be written
