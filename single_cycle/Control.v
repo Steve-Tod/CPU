@@ -127,8 +127,8 @@ module Control(PC,OpCode, Funct, IRQ ,
 		(OpCode == 6'h2b)?1:
 		0;
 	assign MemtoReg[1:0]=
-        XADR ? 2'b10:                  //choose PC + 4
         ILLOP ? 2'b11 :            //choose PC
+        XADR ? 2'b10:                  //choose PC + 4
 	(    OpCode == 6'h03 || 
         (OpCode == 6'h00 && Funct == 6'h09))? 2'b10:
     	(OpCode == 6'h23)? 2'b01:

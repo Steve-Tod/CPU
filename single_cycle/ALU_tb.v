@@ -1,39 +1,52 @@
 module ALU_tb;
-reg [5:0]ALUFun;
-reg [31:0]A,B;
-reg Sign;
-reg clk;
-reg [5:0]fun[14:0];
-integer i;
-initial
-begin
-    clk = 0;
-	A=32'd15;
-	B=32'd31;
-	Sign=1;
-    fun[0] = 6'b00_0000;
-    fun[1] = 6'b00_0001;
-    fun[2] = 6'b01_1000;
-    fun[3]  = 6'b01_1110;
-    fun[4] = 6'b01_0110;
-    fun[5] = 6'b01_0001;
-    fun[6] = 6'b10_0000;
-    fun[7] = 6'b10_0001;
-    fun[8] = 6'b10_0011;
-    fun[9] =  6'b11_0011;
-    fun[10] = 6'b11_0001;
-    fun[11] =  6'b11_0101;
-    fun[12] = 6'b11_1101;
-    fun[13] = 6'b11_1011;
-    fun[14] = 6'b11_1111; 
-    i = 0;
-end
-always@(posedge clk)
-begin
-    ALUFun <= fun[i];
-    i = i+1;
-end
-wire [31:0]Out;
-always #5 clk = ~clk;
-ALU ZY(A,B,ALUFun,Sign,Out);
+  reg[31:0] A,B;
+  reg[5:0] ALUfun;
+  reg Sign;
+  wire[31:0] S;
+  ALU testALU(A,B,ALUfun,Sign,S);
+  initial
+   begin
+     
+     //test for adder:
+     A=32'b1101_1010_1111_1011_0000_0010_0001_1001;
+     B=32'b0010_0010_1011_0000_0100_0010_1101_0001; 
+     Sign=1'b0;
+     ALUfun=6'b000000; //add
+     #50 ALUfun=6'b000001; //sub
+    
+     /*
+     //test for logic:
+     A=32'b1101_1010_1111_1011_0000_0010_0001_1001;
+     B=32'b0010_0010_1011_0000_0100_0010_1101_0001;
+     Sign=1'b0;
+     ALUfun=6'b011000;  //AND
+     #50 ALUfun=6'b011110;  //OR
+     #50 ALUfun=6'b010110;  //XOR
+     #50 ALUfun=6'b010001;  //NOR
+     #50 ALUfun=6'b011010;  //"A"
+     */
+     /*
+     //test for shift:
+     A=32'b0000_0000_0000_0000_0000_0000_0001_1001;
+     B=32'b0010_0010_1011_0000_0100_0010_1101_0001;  //B[31]=0
+     Sign=1'b0;
+     ALUfun=6'b100000;  //SLL
+     #50 ALUfun=6'b100001;  //SRL
+     #50 ALUfun=6'b100011;  //SRA
+     #50 B=32'b1010_0010_1011_0000_0100_0010_1101_0001;  //B[31]=1
+     */
+     /*
+     //test for compare:
+     A=32'b0010_0010_1011_0000_0100_0010_1101_0001;
+     B=32'b0010_0010_1011_0000_0100_0010_1101_0001;
+     Sign=1'b0;
+     ALUfun=6'b110011;  //EQ;
+     #50 ALUfun=6'b110001;  //NEQ
+     #50 ALUfun=6'b110101;  //LT
+     #50 B=32'b0000_0000_0000_0000_0000_0000_0000_0000;
+     ALUfun=6'b111101;  //LEZ
+     #50 ALUfun=6'b111001;  //GEZ
+     #50 ALUfun=6'b111111;  //GTZ
+     */
+   end
 endmodule
