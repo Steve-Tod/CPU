@@ -75,11 +75,12 @@ always @(posedge clk or negedge reset) begin
         EX_rd <= 0;
         EX_Shamt <= 0;
         EX_ALUFun <= 0;
-        EX_PC_plus_4 <= 0;
         EX_Imm_Exted <= 0;
         EX_DataBus1 <= 0;
         EX_DataBus2 <= 0;
         EX_ConBA <= 0;
+        if(~reset) 
+            EX_PC_plus_4 <= 32'h80000000;
     end
     else begin
         EX_RegWrite <= ID_RegWrite;
@@ -87,7 +88,7 @@ always @(posedge clk or negedge reset) begin
         EX_ALUSrc2 <= ID_ALUSrc2;
         EX_Sign <= ID_Sign;
         EX_MemWrite <= ID_MemWrite;
-        EX_MemRead <= ID_MemWrite;
+        EX_MemRead <= ID_MemRead;
         EX_MemtoReg <= ID_MemtoReg;
         EX_RegDst <= ID_RegDst;
         EX_PCSrc <= ID_PCSrc;
