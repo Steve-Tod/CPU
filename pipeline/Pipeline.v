@@ -231,10 +231,10 @@ assign ILLOP = 32'h80000004;
 assign XADR = 32'h80000008;
 
 wire [2:0] PCSrc;
-assign PCSrc =   //pc choose
-((EX_PCSrc == 3'b001)&&(EX_ALUOut[0] == 1)) ? 3'b001://Branch  we should first consider the pc
-(ID_PCSrc == 3'b001) ?3'b000 : 
-ID_PCSrc;
+assign PCSrc =   //pc choose, we know j is  jump at ID, if EX is Branch , j cant jump
+	((EX_PCSrc == 3'b001)&&(EX_ALUOut[0] == 1)) ? 3'b001://Branch  we should first consider the pc, at the mean time IF ID become nop  
+	(ID_PCSrc == 3'b001) ?3'b000 : // ID we find a branch  let it go pc + 4
+	ID_PCSrc;   //ID we find 000,go pc + 4; else is J jump,we choose the jump
 
 wire [31:0] EX_ConBA_PC;//Branch ,pc + 4 or ConBA
 assign EX_ConBA_PC = EX_ALUOut[0] ? EX_ConBA: EX_PC_plus_4;
@@ -288,17 +288,17 @@ Forward Forward(
 assign EX_DataBusA = 
 	               (ForwardA == 2'b00) ? EX_DataBusA0 :
 	               (ForwardA == 2'b01) ? WB_Write_Data :
-	               (ForwardA == 2'b10) ? MEM_ALUOut : 32'b0;
+	               (ForwardA == 2'b10) ? MEM_ALUOut : 32'b0;  //32'b0 is impossible just for good looks
 	               
 assign EX_DataBusB = 
 	               (ForwardB == 2'b00) ? EX_DataBusB0 :
 	               (ForwardB == 2'b01) ? WB_Write_Data :
 	               (ForwardB == 2'b10) ? MEM_ALUOut : 32'b0;
-                                    
+ //sw  use the rs and imm cal. out the addr, and use the rt(busB) to write the mem                                   
 assign EX_WriteData = 
 	               (ForwardM == 2'b00) ? EX_DataBusB0 :
 	               (ForwardM == 2'b01) ? WB_Write_Data :
-	               (ForwardM == 2'b10) ? MEM_ALUOut : 32'b0;
+	               (ForwardM == 2'b10) ? MEM_ALUOut : 32'b0;  
 	               
 endmodule	
 	
