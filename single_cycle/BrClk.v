@@ -1,4 +1,4 @@
-module br_clk_16(sysclk, brclk16);
+module BrClk(sysclk, brclk16);
 input   sysclk;
 output  reg brclk16;
 

@@ -1,4 +1,4 @@
-module receiver(reset, UART_RX, br_clk_16, RX_DATA, RX_STATUS);
+module Receiver(reset, UART_RX, br_clk_16, RX_DATA, RX_STATUS);
 input	UART_RX, br_clk_16, reset;
 output	RX_STATUS;
 output	[7:0]	RX_DATA;

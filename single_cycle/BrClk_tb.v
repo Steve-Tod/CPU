@@ -1,4 +1,4 @@
-module CLK_tb;
+module BrClk_tb;
 reg sysclk;
 initial
 begin

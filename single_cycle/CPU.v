@@ -89,7 +89,7 @@ UART_RX, UART_TX);
      .wr(MemWrite2),.addr(ALU_out),.wdata(Databus2),.rdata(Read_data2),
      .led(led), .switch(switch),.digi(digi),.UART_RX(UART_RX),
      .UART_TX(UART_TX),.irqout(IRQ),.PC31(PC[31]));
-	digitube_scan scan(.digi_in(digi),.digi_out1(digi1),.digi_out2(digi2),.digi_out3(digi3),.digi_out4(digi4));
+	DigitubeScan scan(.digi_in(digi),.digi_out1(digi1),.digi_out2(digi2),.digi_out3(digi3),.digi_out4(digi4));
 
 	assign Databus3 = 
 	         (MemtoReg == 2'b00)? ALU_out: 

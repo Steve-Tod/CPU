@@ -2,7 +2,7 @@
 
 //For Altera DE2: Trans non-scanning Digital tube to scanning Digital tube
 
-module digitube_scan(digi_in,digi_out1,digi_out2,digi_out3,digi_out4);
+module DigitubeScan(digi_in,digi_out1,digi_out2,digi_out3,digi_out4);
 input [11:0] digi_in;	//AN3,AN2,AN1,AN0,DP,CG,CF,CE,CD,CC,CB,CA
 output [6:0] digi_out1;	//0: CG,CF,CE,CD,CC,CB,CA
 output [6:0] digi_out2;	//1: CG,CF,CE,CD,CC,CB,CA
