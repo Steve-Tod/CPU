@@ -1,4 +1,4 @@
-module Test_Pipeline;
+module Pipeline_tb;
 reg reset,sysclk;
 reg UART_RX;
 wire [6:0] digi1, digi2, digi3, digi4;
@@ -15,8 +15,8 @@ begin
 	UART_RX <= 1;
 	#100000	
 	UART_RX <= 0;   
-	#104166 UART_RX <= 0;   
-	#104166 UART_RX <= 0;  
+	#104166 UART_RX <= 1;   
+	#104166 UART_RX <= 1;  
 	#104166 UART_RX <= 0;    
 	#104166 UART_RX <= 1;    
 	#104166 UART_RX <= 1;   
@@ -24,7 +24,7 @@ begin
 	#104166 UART_RX <= 0;    
 	#104166 UART_RX <= 0;
 	#104166 UART_RX<=1;
-	//24
+	//27
 	
 	#104166 UART_RX <= 0; 
 	

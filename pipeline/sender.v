@@ -1,4 +1,4 @@
-module sender(reset, br_clk_16, TX_DATA, TX_EN, TX_STATUS, UART_TX);
+module Sender(reset, br_clk_16, TX_DATA, TX_EN, TX_STATUS, UART_TX);
 input	[7:0]	TX_DATA;
 input	TX_EN, reset, br_clk_16;
 output	UART_TX, TX_STATUS;

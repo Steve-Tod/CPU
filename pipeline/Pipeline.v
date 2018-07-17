@@ -194,7 +194,7 @@ assign MemWrite1 = (MEM_MemWrite && (~MEM_ALUOut[30]));
 assign MemWrite2 = (MEM_MemWrite && (MEM_ALUOut[30]));
 DataMem data_memory1(.reset(reset),.clk(sysclk),.Address(MEM_ALUOut), .MemRead(MEM_MemRead), .MemWrite(MemWrite1),.Write_data(MEM_WriteData), .Read_data(Read_Data1));
 Peripheral peripheral1(.reset(reset),.clk(sysclk),.rd(MEM_MemRead), .wr(MemWrite2),.addr(MEM_ALUOut),.wdata(MEM_WriteData),.rdata(Read_Data2), .led(led), .switch(switch),.digi(digi),.UART_RX(UART_RX), .UART_TX(UART_TX),.irqout(IRQ),.PC31(IF_PC[31]||ID_PC_plus_4[31]));
-digitube_scan scan1(.digi_in(digi),.digi_out1(digi1),.digi_out2(digi2),.digi_out3(digi3),.digi_out4(digi4));
+DigitubeScan scan1(.digi_in(digi),.digi_out1(digi1),.digi_out2(digi2),.digi_out3(digi3),.digi_out4(digi4));
 	
 //===========WB===============//
 

@@ -33,9 +33,9 @@ reg     reading, writing;
 reg     [9:0]   TX_cnt;
 parameter   CNT_NUM = 10'd325;
 
-br_clk_16 br_clk1(clk, brclk16);
-receiver receiver1(reset, UART_RX, brclk16, RX_DATA, RX_STATUS);
-sender sender1(reset, brclk16, TX_DATA, TX_EN, TX_STATUS, UART_TX);
+BrClk br_clk1(clk, brclk16);
+Receiver Receiver1(reset, UART_RX, brclk16, RX_DATA, RX_STATUS);
+Sender Sender1(reset, brclk16, TX_DATA, TX_EN, TX_STATUS, UART_TX);
 
 reg [31:0] TH,TL;
 reg [2:0] TCON;
@@ -118,7 +118,7 @@ always@(negedge reset or posedge clk) begin
                 32'h4000000C: led <= wdata[7:0];            
                 32'h40000014: digi <= wdata[11:0];
                 32'h40000018: begin
-                    //since sender has cache, we don't need to worry if new TXD will affect the sending one
+                    //since Sender has cache, we don't need to worry if new TXD will affect the sending one
                     UART_TXD <= wdata[7:0];
                     if (TX_STATUS && ~TX_EN && UART_CON[0]) begin
                         TX_EN <= 1;
