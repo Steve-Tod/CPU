@@ -4,10 +4,13 @@ reg UART_RX;
 wire [6:0] digi1, digi2, digi3, digi4;
 wire [7:0] led;
 wire UART_TX;
+wire [7:0] switch;
+assign switch = 0;
 initial 
 begin    
-	reset <= 0;
-	#1 reset <= 1;
+	reset <= 1;
+	#10 reset <= 0;
+	#10 reset <= 1;
 	sysclk <=0;
 	UART_RX <= 1;
 	#100000	
