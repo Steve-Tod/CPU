@@ -10,7 +10,11 @@ input   [31:0]  IF_Instruct, IF_PC_plus_4;
 output  reg [31:0]  ID_Instruct, ID_PC_plus_4;
 
 always @(posedge clk or negedge reset) begin
-    if (~reset || IF_ID_Flush) begin
+    if (~reset) begin
+        ID_PC_plus_4 <= 32'h80000000;
+        ID_Instruct <= 32'h0;
+    end
+    else if (IF_ID_Flush) begin
         ID_PC_plus_4 <= 32'h80000000;
         ID_Instruct <= 32'h0;
     end
@@ -60,7 +64,8 @@ output  reg [31:0]  EX_PC_plus_4, EX_Imm_Exted,
                     EX_DataBus1, EX_DataBus2, EX_ConBA;
 
 always @(posedge clk or negedge reset) begin
-    if(~reset || ID_EX_Flush) begin
+    if(~reset) begin
+        EX_PC_plus_4 <= 0;
         EX_RegWrite <= 0;
         EX_ALUSrc1 <= 0;
         EX_ALUSrc2 <= 0;
@@ -79,8 +84,26 @@ always @(posedge clk or negedge reset) begin
         EX_DataBus1 <= 0;
         EX_DataBus2 <= 0;
         EX_ConBA <= 0;
-        if(~reset) 
-            EX_PC_plus_4 <= 32'h80000000;
+    end
+    else if (ID_EX_Flush) begin
+        EX_RegWrite <= 0;
+        EX_ALUSrc1 <= 0;
+        EX_ALUSrc2 <= 0;
+        EX_Sign <= 0;
+        EX_MemWrite <= 0;
+        EX_MemRead <= 0;
+        EX_MemtoReg <= 0;
+        EX_RegDst <= 0;
+        EX_PCSrc <= 0;
+        EX_rs <= 0;
+        EX_rt <= 0;
+        EX_rd <= 0;
+        EX_Shamt <= 0;
+        EX_ALUFun <= 0;
+        EX_Imm_Exted <= 0;
+        EX_DataBus1 <= 0;
+        EX_DataBus2 <= 0;
+        EX_ConBA <= 0;
     end
     else begin
         EX_RegWrite <= ID_RegWrite;
