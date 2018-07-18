@@ -25,7 +25,7 @@ reg     [7:0]   UART_TXD;
 reg     [7:0]   UART_RXD;
 wire    TX_STATUS;
 wire    RX_STATUS;
-wire    [7:0]   TX_DATA;
+reg     [7:0]   TX_DATA;
 wire    [7:0]   RX_DATA;
 reg     TX_EN;
 reg     [4:0]   UART_CON;
@@ -103,7 +103,7 @@ always@(negedge reset or posedge clk) begin
 
         // lengthen the TX_EN pulse
         if (TX_EN) begin
-            if (TX_cnt < CNT_NUM) TX_cnt <= TX_DATA + 1;
+            if (TX_cnt < CNT_NUM) TX_cnt <= TX_cnt + 1;
             else begin
                 TX_cnt <= 0;
                 TX_EN <= 0;
@@ -122,6 +122,7 @@ always@(negedge reset or posedge clk) begin
                     UART_TXD <= wdata[7:0];
                     if (TX_STATUS && ~TX_EN && UART_CON[0]) begin
                         TX_EN <= 1;
+                        TX_DATA <= wdata[7:0];
                     end
 				end
 				//UART_RXD should not be written
