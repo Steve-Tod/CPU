@@ -13,6 +13,8 @@ wire	UART_TX;
 
 initial begin
 	reset = 1;
+	#10 reset = 0;
+	#10 reset = 1;
 	clk = 0;
 	rd = 1;
 	wr = 0;
@@ -22,7 +24,8 @@ initial begin
 	wdata = 32'h0;
 	switch = 0;
 	data = 40'hffffa7ff96;
-	#1000000 addr = 32'h40000020;
+	// read RXD
+	#150000 addr = 32'h40000020;
 	#10 addr = 32'h4000001c;
 end
 

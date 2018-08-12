@@ -72,8 +72,7 @@ always@(negedge reset or posedge clk) begin
     if(~reset) begin
         TH <= 32'b0;
         TL <= 32'b0;
-        TCON <= 3'b0; 
-        UART_CON <= 0;
+        TCON <= 3'b0;
         TX_EN <= 0;
         reading <= 0;
         TX_cnt <= 0;
